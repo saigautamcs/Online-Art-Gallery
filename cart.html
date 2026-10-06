@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Art Gallery | Cart</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#100c14;color:#f5e9d0;font:14px Arial}
+.layout{min-height:100vh;display:flex}
+.side{width:250px;flex:0 0 250px;background:#18121d;border-right:1px solid #493a50;padding:28px 16px;display:flex;flex-direction:column}
+.logo{padding:0 15px 25px;border-bottom:1px solid #493a50;color:#d4af37;font:700 19px Georgia;letter-spacing:4px}
+.logo small{display:block;color:#756b78;font:9px Arial;letter-spacing:2px;margin-top:7px}
+.nav{display:grid;gap:6px;margin-top:28px}
+.nav a{height:45px;padding:0 13px;border-radius:9px;color:#aaa0ad;text-decoration:none;display:flex;align-items:center;gap:12px}
+.nav a:hover,.nav .active{background:#241b28;color:#d4af37}
+.bottom{margin-top:auto;border-top:1px solid #493a50;padding-top:15px}
+.avatar{width:39px;height:39px;border-radius:50%;display:grid;place-items:center;background:#d4af37;color:#100c14;font:bold 18px Georgia}
+.user{display:flex;gap:10px;align-items:center}.user small{display:block;color:#756b78;margin-top:3px}
+.logout{width:100%;margin-top:10px;padding:10px;border:1px solid #493a50;background:none;color:#d4af37;border-radius:8px}
+.main{flex:1;padding:32px clamp(20px,5vw,55px)}
+.top{display:flex;justify-content:space-between;margin-bottom:35px}
+.crumb{color:#756b78;font-size:10px;letter-spacing:1.5px}.crumb b{color:#d4af37}
+h1{font:normal 42px Georgia;margin:0 0 7px}.sub{color:#8f8492}
+.layout2{display:grid;grid-template-columns:minmax(0,1.5fr) 310px;gap:18px;margin-top:24px}
+.box{background:#18121d;border:1px solid #493a50;border-radius:15px;padding:20px}
+.row{display:grid;grid-template-columns:80px 1fr auto;gap:14px;padding:14px 0;border-bottom:1px solid #302735;align-items:center}
+.row:last-child{border:0}.pic{width:80px;height:70px;object-fit:cover;border-radius:9px}
+.artist{color:#8f8492;font-size:11px;margin:5px 0 10px}.price{color:#d4af37;font-weight:bold}
+.qty{display:flex;gap:6px;align-items:center}.qty button,.remove{border:1px solid #493a50;background:#211927;color:#eee;border-radius:6px;cursor:pointer}
+.qty button{width:29px;height:29px}.remove{padding:6px 9px;font-size:10px;margin-top:7px}
+.qty button:hover,.remove:hover{border-color:#d4af37;color:#d4af37}
+.line{display:flex;justify-content:space-between;padding:8px 0;color:#b9afba}
+.total{border-top:1px solid #493a50;padding-top:13px;margin-top:7px;color:#d4af37;font-size:18px}
+.checkout{width:100%;border:0;background:#d4af37;color:#100c14;padding:13px;border-radius:8px;font-weight:bold;margin-top:15px;cursor:pointer}
+.empty{text-align:center;padding:55px 15px;color:#8f8492}.empty a{color:#d4af37;text-decoration:none}
+@media(max-width:850px){.layout2{grid-template-columns:1fr}}
+@media(max-width:650px){.layout{display:block}.side{width:100%;padding:18px}.nav{grid-template-columns:repeat(2,1fr)}.bottom{margin-top:18px}.main{padding:22px 15px}.row{grid-template-columns:65px 1fr}.end{grid-column:2}.pic{width:65px;height:60px}}
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+<aside class="side">
+<div class="logo">ART GALLERY<small>ONLINE ART COLLECTION</small></div>
+
+<nav class="nav">
+<a href="user-dashboard.html">⌂ Home</a>
+<a href="user-dashboard.html#gallery">▣ Explore Gallery</a>
+<a href="user-dashboard.html#favorites">★ Favorites</a>
+<a href="user-dashboard.html#artists">♙ Artists</a>
+<a href="user-dashboard.html#recent">◷ Recently Viewed</a>
+<a href="user-dashboard.html#profile">● My Profile</a>
+<a class="active" href="cart.html">🛒 Cart</a>
+<a href="orders.html">▤ My Orders</a>
+</nav>
+
+<div class="bottom">
+<div class="user">
+<div class="avatar" id="av">U</div>
+<div><b id="nm">User</b><small>User Account</small></div>
+</div>
+<button class="logout" id="logout">LOGOUT</button>
+</div>
+</aside>
+
+<main class="main">
+
+<div class="top">
+<div class="crumb">USER DASHBOARD / <b>CART</b></div>
+</div>
+
+<h1>Your Cart</h1>
+<div class="sub">Review your selected artwork before checkout.</div>
+
+<div class="layout2">
+
+<section class="box" id="items"></section>
+
+<aside class="box">
+<h2 style="font:normal 25px Georgia;margin-top:0">Order Summary</h2>
+<div id="sum"></div>
+<button class="checkout" id="go">PROCEED TO CHECKOUT</button>
+</aside>
+
+</div>
+</main>
+</div>
+
+<script>
+const u=JSON.parse(localStorage.getItem("artGalleryCurrentUser")||"null")||{name:"User",email:"guest"};
+const key="artGalleryCart_"+(u.email||u.name).replace(/[^a-z0-9]/gi,"_");
+
+const arts=[
+{id:1,title:"Golden Silence",artist:"Aria Bennett",price:18500,image:"https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&w=700&q=80"},
+{id:2,title:"Midnight Geometry",artist:"Noah Williams",price:24000,image:"https://images.unsplash.com/photo-1547891654-e66ed7ebb968?auto=format&fit=crop&w=700&q=80"},
+{id:3,title:"Quiet Morning",artist:"Maya Chen",price:16200,image:"https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=700&q=80"},
+{id:4,title:"Fragments of Light",artist:"Ethan Cole",price:29500,image:"https://images.unsplash.com/photo-1577083288073-40892c0860a4?auto=format&fit=crop&w=700&q=80"},
+{id:5,title:"Velvet Horizon",artist:"Aria Bennett",price:21800,image:"https://images.unsplash.com/photo-1578301978018-3005759f48f7?auto=format&fit=crop&w=700&q=80"},
+{id:6,title:"Urban Echo",artist:"Maya Chen",price:13200,image:"https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=700&q=80"}
+];
+
+const read=k=>JSON.parse(localStorage.getItem(k)||"[]");
+const save=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const money=n=>"₹"+n.toLocaleString("en-IN");
+
+function render(){
+
+let c=read(key);
+let box=document.getElementById("items");
+
+if(!c.length){
+box.innerHTML=`
+<div class="empty">
+<h2 style="font:normal 28px Georgia;color:#eee">Your cart is empty</h2>
+<p>Find an artwork you love and add it to your collection.</p>
+<a href="user-dashboard.html#gallery">EXPLORE GALLERY →</a>
+</div>`;
+
+document.getElementById("sum").innerHTML=
+'<div class="line"><span>Total</span><b>₹0</b></div>';
+return;
+}
+
+box.innerHTML=c.map(x=>{
+let a=arts.find(v=>+v.id===+x.id);
+
+return `
+<div class="row">
+
+<img class="pic" src="${a.image}" alt="${a.title}">
+
+<div>
+<b>${a.title}</b>
+<div class="artist">by ${a.artist}</div>
+
+<div class="qty">
+<button data-q="${a.id}" data-d="-1">−</button>
+<span>${x.qty||1}</span>
+<button data-q="${a.id}" data-d="1">+</button>
+</div>
+</div>
+
+<div class="end">
+<div class="price">${money(a.price*(x.qty||1))}</div>
+<button class="remove" data-r="${a.id}">Remove</button>
+</div>
+
+</div>`;
+}).join("");
+
+let subtotal=c.reduce((t,x)=>{
+let a=arts.find(v=>+v.id===+x.id);
+return t+(a?.price||0)*(x.qty||1);
+},0);
+
+let fee=Math.round(subtotal*.02);
+
+document.getElementById("sum").innerHTML=`
+<div class="line"><span>Subtotal</span><b>${money(subtotal)}</b></div>
+<div class="line"><span>Gallery service</span><b>${money(fee)}</b></div>
+<div class="line total"><span>Total</span><b>${money(subtotal+fee)}</b></div>`;
+}
+
+document.addEventListener("click",e=>{
+
+let q=e.target.closest("[data-q]");
+let r=e.target.closest("[data-r]");
+let c=read(key);
+
+if(q){
+let x=c.find(v=>+v.id===+q.dataset.q);
+x.qty=Math.max(1,(x.qty||1)+(+q.dataset.d));
+save(key,c);
+render();
+}
+
+if(r){
+save(key,c.filter(v=>+v.id!==+r.dataset.r));
+render();
+}
+});
+
+document.getElementById("go").onclick=()=>{
+if(!read(key).length){
+alert("Your cart is empty.");
+return;
+}
+location.href="orders.html?checkout=1";
+};
+
+document.getElementById("logout").onclick=()=>{
+localStorage.removeItem("artGalleryCurrentUser");
+location.href="Login.html";
+};
+
+document.getElementById("nm").textContent=u.name;
+document.getElementById("av").textContent=(u.name||"U")[0].toUpperCase();
+
+render();
+</script>
+
+</body>
+</html>
