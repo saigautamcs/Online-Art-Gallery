@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Artist Dashboard | Art Gallery</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #100c14;
+    color: #f5e9d0;
+    min-height: 100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+
+    width: 250px;
+    height: 100vh;
+
+    background: #18121d;
+    border-right: 1px solid #3b2a45;
+
+    padding: 25px 18px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    text-align: center;
+
+    color: #d4af37;
+
+    font-family: Georgia, serif;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    letter-spacing: 3px;
+
+    margin-bottom: 30px;
+}
+
+.logo span {
+    display: block;
+
+    color: #756b78;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 9px;
+
+    letter-spacing: 2px;
+
+    margin-top: 6px;
+}
+
+.artist-mini {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    background: #211927;
+
+    border: 1px solid #493a50;
+
+    border-radius: 12px;
+
+    padding: 13px;
+
+    margin-bottom: 28px;
+}
+
+.avatar {
+    width: 43px;
+    height: 43px;
+
+    border-radius: 50%;
+
+    background: #d4af37;
+
+    color: #17121c;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-weight: bold;
+
+    font-size: 18px;
+}
+
+.name {
+    font-size: 14px;
+
+    font-weight: bold;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+}
+
+.role {
+    color: #8f8593;
+
+    font-size: 11px;
+
+    margin-top: 4px;
+}
+
+.nav-title {
+    color: #756b78;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 10px;
+
+    padding-left: 10px;
+}
+
+.nav {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.nav button {
+    width: 100%;
+
+    padding: 13px;
+
+    background: transparent;
+
+    border: 1px solid transparent;
+
+    border-radius: 9px;
+
+    color: #aaa0ad;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    transition: .25s;
+}
+
+.nav button:hover {
+    background: #211927;
+
+    color: #f5e9d0;
+}
+
+.nav button.active {
+    background: #30251b;
+
+    color: #d4af37;
+
+    border-color: #725d2d;
+}
+
+.icon {
+    display: inline-block;
+
+    width: 28px;
+}
+
+.bottom {
+    margin-top: auto;
+}
+
+.logout {
+    width: 100%;
+
+    padding: 12px;
+
+    background: transparent;
+
+    border: 1px solid #493a50;
+
+    border-radius: 9px;
+
+    color: #aaa0ad;
+
+    cursor: pointer;
+}
+
+.logout:hover {
+    color: #ff7675;
+
+    border-color: #694044;
+}
+
+/* MAIN */
+
+.main {
+    margin-left: 250px;
+
+    padding: 30px 38px;
+
+    min-height: 100vh;
+}
+
+.topbar {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 30px;
+}
+
+.title h1 {
+    font-family: Georgia, serif;
+
+    font-size: 31px;
+
+    margin-bottom: 5px;
+}
+
+.title p {
+    color: #8f8593;
+
+    font-size: 13px;
+}
+
+/* SECTIONS */
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+/* WELCOME */
+
+.welcome {
+    background:
+        linear-gradient(
+            135deg,
+            #302039,
+            #1d1524
+        );
+
+    border: 1px solid #493a50;
+
+    border-radius: 17px;
+
+    padding: 32px;
+
+    margin-bottom: 25px;
+}
+
+.welcome h2 {
+    font-family: Georgia, serif;
+
+    font-size: 28px;
+
+    margin-bottom: 10px;
+}
+
+.welcome h2 span {
+    color: #d4af37;
+}
+
+.welcome p {
+    color: #b5abb9;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+/* STATS */
+
+.stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 15px;
+
+    margin-bottom: 32px;
+}
+
+.card {
+    background: #18121d;
+
+    border: 1px solid #3b2a45;
+
+    border-radius: 13px;
+
+    padding: 20px;
+}
+
+.card:hover {
+    border-color: #725d2d;
+}
+
+.card-icon {
+    font-size: 22px;
+
+    margin-bottom: 12px;
+}
+
+.value {
+    font-family: Georgia, serif;
+
+    font-size: 25px;
+
+    font-weight: bold;
+}
+
+.label {
+    color: #837989;
+
+    font-size: 10px;
+
+    margin-top: 5px;
+
+    letter-spacing: 1px;
+}
+
+/* HEADER */
+
+.section-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 17px;
+}
+
+.section-header h3 {
+    font-family: Georgia, serif;
+
+    font-size: 22px;
+}
+
+/* ARTWORK GRID */
+
+.art-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 17px;
+}
+
+.art-card {
+    background: #18121d;
+
+    border: 1px solid #3b2a45;
+
+    border-radius: 13px;
+
+    overflow: hidden;
+}
+
+.art-image {
+    height: 210px;
+
+    overflow: hidden;
+}
+
+.art-image img {
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+
+    transition: .5s;
+}
+
+.art-card:hover img {
+    transform: scale(1.06);
+}
+
+.art-info {
+    padding: 15px;
+}
+
+.art-title {
+    font-family: Georgia, serif;
+
+    font-size: 16px;
+
+    margin-bottom: 5px;
+}
+
+.artist {
+    color: #837989;
+
+    font-size: 12px;
+
+    margin-bottom: 12px;
+}
+
+.art-bottom {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+.price {
+    color: #d4af37;
+
+    font-weight: bold;
+}
+
+.delete {
+    background: transparent;
+
+    border: none;
+
+    color: #e06c75;
+
+    cursor: pointer;
+}
+
+/* UPLOAD */
+
+.upload-box {
+    max-width: 700px;
+
+    background: #18121d;
+
+    border: 1px solid #3b2a45;
+
+    border-radius: 15px;
+
+    padding: 28px;
+}
+
+.field {
+    margin-bottom: 18px;
+}
+
+.field label {
+    display: block;
+
+    color: #837989;
+
+    font-size: 11px;
+
+    margin-bottom: 7px;
+
+    letter-spacing: 1px;
+}
+
+.field input,
+.field textarea {
+    width: 100%;
+
+    background: #211927;
+
+    border: 1px solid #493a50;
+
+    border-radius: 8px;
+
+    padding: 12px;
+
+    color: white;
+
+    outline: none;
+}
+
+.field textarea {
+    min-height: 120px;
+
+    resize: vertical;
+}
+
+.gold-btn {
+    background: #d4af37;
+
+    border: none;
+
+    border-radius: 8px;
+
+    padding: 12px 22px;
+
+    color: #17121c;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+/* PROFILE */
+
+.profile {
+    max-width: 650px;
+
+    background: #18121d;
+
+    border: 1px solid #3b2a45;
+
+    border-radius: 15px;
+
+    padding: 28px;
+}
+
+.profile-top {
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    padding-bottom: 22px;
+
+    margin-bottom: 25px;
+
+    border-bottom: 1px solid #33283a;
+}
+
+.big-avatar {
+    width: 75px;
+    height: 75px;
+
+    border-radius: 50%;
+
+    background: #d4af37;
+
+    color: #17121c;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-size: 30px;
+
+    font-weight: bold;
+}
+
+.profile-field {
+    margin-bottom: 20px;
+}
+
+.profile-field label {
+    display: block;
+
+    color: #837989;
+
+    font-size: 10px;
+
+    margin-bottom: 7px;
+
+    letter-spacing: 1px;
+}
+
+.profile-field div {
+    background: #211927;
+
+    border: 1px solid #3b2a45;
+
+    border-radius: 8px;
+
+    padding: 12px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1000px) {
+
+    .stats {
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .art-grid {
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:700px) {
+
+    .sidebar {
+        position: relative;
+
+        width: 100%;
+
+        height: auto;
+    }
+
+    .main {
+        margin-left: 0;
+
+        padding: 22px;
+    }
+
+    .art-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+</style>
+</style>
+<link rel="stylesheet" href="gallery-theme.css">
+</head>
+
+<body>
+
+<aside class="sidebar">
+
+    <div class="logo">
+        ART GALLERY
+        <span>ARTIST PORTAL</span>
+    </div>
+
+    <div class="artist-mini">
+
+        <div class="avatar" id="avatar">
+            A
+        </div>
+
+        <div>
+
+            <div class="name" id="artistName">
+                Artist
+            </div>
+
+            <div class="role">
+                🎨 Artist Account
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="nav-title">
+        MENU
+    </div>
+
+    <nav class="nav">
+
+        <button class="active" data-section="home">
+            <span class="icon">🏠</span>
+            Dashboard
+        </button>
+
+        <button data-section="artworks">
+            <span class="icon">🖼️</span>
+            My Artworks
+        </button>
+
+        <button data-section="upload">
+            <span class="icon">➕</span>
+            Upload Artwork
+        </button>
+
+        <button data-section="sales">
+            <span class="icon">💰</span>
+            Sales
+        </button>
+
+        <button data-section="profile">
+            <span class="icon">👤</span>
+            My Profile
+        </button>
+
+    </nav>
+
+    <div class="bottom">
+
+        <button class="logout" id="logout">
+            🚪 Logout
+        </button>
+
+    </div>
+
+</aside>
+
+
+<main class="main">
+
+    <div class="topbar">
+
+        <div class="title">
+
+            <h1 id="pageTitle">
+                Artist Dashboard
+            </h1>
+
+            <p id="pageSubtitle">
+                Manage your artwork and sales
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- HOME -->
+
+    <section class="section active" id="home">
+
+        <div class="welcome">
+
+            <h2>
+                Welcome, <span id="welcomeName">Artist</span>!
+            </h2>
+
+            <p>
+                Manage your artwork, upload new creations,
+                track your sales and build your presence
+                in the gallery.
+            </p>
+
+        </div>
+
+
+        <div class="stats">
+
+            <div class="card">
+
+                <div class="card-icon">
+                    🖼️
+                </div>
+
+                <div class="value">
+                    12
+                </div>
+
+                <div class="label">
+                    ARTWORKS
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    💰
+                </div>
+
+                <div class="value">
+                    ₹48,500
+                </div>
+
+                <div class="label">
+                    TOTAL SALES
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    ❤️
+                </div>
+
+                <div class="value">
+                    86
+                </div>
+
+                <div class="label">
+                    LIKES
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    👁️
+                </div>
+
+                <div class="value">
+                    1,245
+                </div>
+
+                <div class="label">
+                    VIEWS
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="section-header">
+
+            <h3>
+                Your Recent Artwork
+            </h3>
+
+        </div>
+
+
+        <div class="art-grid">
+
+            <div class="art-card">
+
+                <div class="art-image">
+
+                    <img src="https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&w=900&q=85">
+
+                </div>
+
+                <div class="art-info">
+
+                    <div class="art-title">
+                        Golden Horizon
+                    </div>
+
+                    <div class="artist">
+                        Your Artwork
+                    </div>
+
+                    <div class="art-bottom">
+
+                        <span class="price">
+                            ₹12,500
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="art-card">
+
+                <div class="art-image">
+
+                    <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=900&q=85">
+
+                </div>
+
+                <div class="art-info">
+
+                    <div class="art-title">
+                        Garden Dreams
+                    </div>
+
+                    <div class="artist">
+                        Your Artwork
+                    </div>
+
+                    <div class="art-bottom">
+
+                        <span class="price">
+                            ₹8,750
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="art-card">
+
+                <div class="art-image">
+
+                    <img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?auto=format&fit=crop&w=900&q=85">
+
+                </div>
+
+                <div class="art-info">
+
+                    <div class="art-title">
+                        Ocean Silence
+                    </div>
+
+                    <div class="artist">
+                        Your Artwork
+                    </div>
+
+                    <div class="art-bottom">
+
+                        <span class="price">
+                            ₹15,200
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ARTWORKS -->
+
+    <section class="section" id="artworks">
+
+        <div class="section-header">
+
+            <h3>
+                My Artworks
+            </h3>
+
+        </div>
+
+        <div class="art-grid">
+
+            <div class="art-card">
+
+                <div class="art-image">
+
+                    <img src="https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&w=900&q=85">
+
+                </div>
+
+                <div class="art-info">
+
+                    <div class="art-title">
+                        Golden Horizon
+                    </div>
+
+                    <div class="artist">
+                        Published
+                    </div>
+
+                    <div class="art-bottom">
+
+                        <span class="price">
+                            ₹12,500
+                        </span>
+
+                        <button class="delete">
+                            Delete
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="art-card">
+
+                <div class="art-image">
+
+                    <img src="https://images.unsplash.com/photo-1577083288073-40892c0860a4?auto=format&fit=crop&w=900&q=85">
+
+                </div>
+
+                <div class="art-info">
+
+                    <div class="art-title">
+                        Midnight Dreams
+                    </div>
+
+                    <div class="artist">
+                        Published
+                    </div>
+
+                    <div class="art-bottom">
+
+                        <span class="price">
+                            ₹18,900
+                        </span>
+
+                        <button class="delete">
+                            Delete
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- UPLOAD -->
+
+    <section class="section" id="upload">
+
+        <div class="section-header">
+
+            <h3>
+                Upload Artwork
+            </h3>
+
+        </div>
+
+        <div class="upload-box">
+
+            <div class="field">
+
+                <label>
+                    ARTWORK TITLE
+                </label>
+
+                <input
+                    type="text"
+                    id="artTitle"
+                    placeholder="Enter artwork title">
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    PRICE
+                </label>
+
+                <input
+                    type="number"
+                    id="artPrice"
+                    placeholder="Enter price">
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    IMAGE URL
+                </label>
+
+                <input
+                    type="text"
+                    id="artImage"
+                    placeholder="Paste image URL">
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    DESCRIPTION
+                </label>
+
+                <textarea
+                    id="artDescription"
+                    placeholder="Describe your artwork">
+                </textarea>
+
+            </div>
+
+
+            <button
+                class="gold-btn"
+                id="uploadBtn">
+
+                Upload Artwork
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- SALES -->
+
+    <section class="section" id="sales">
+
+        <div class="section-header">
+
+            <h3>
+                Sales
+            </h3>
+
+        </div>
+
+        <div class="stats">
+
+            <div class="card">
+
+                <div class="card-icon">
+                    💰
+                </div>
+
+                <div class="value">
+                    ₹48,500
+                </div>
+
+                <div class="label">
+                    TOTAL REVENUE
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <div class="card-icon">
+                    🛒
+                </div>
+
+                <div class="value">
+                    8
+                </div>
+
+                <div class="label">
+                    SOLD ARTWORKS
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- PROFILE -->
+
+    <section class="section" id="profile">
+
+        <div class="profile">
+
+            <div class="profile-top">
+
+                <div class="big-avatar" id="profileAvatar">
+                    A
+                </div>
+
+                <div>
+
+                    <h2 id="profileName">
+                        Artist
+                    </h2>
+
+                    <p>
+                        🎨 Artist Account
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-field">
+
+                <label>
+                    NAME
+                </label>
+
+                <div id="profileFullName">
+                    Artist
+                </div>
+
+            </div>
+
+
+            <div class="profile-field">
+
+                <label>
+                    EMAIL
+                </label>
+
+                <div id="profileEmail">
+                    Not available
+                </div>
+
+            </div>
+
+
+            <div class="profile-field">
+
+                <label>
+                    ACCOUNT TYPE
+                </label>
+
+                <div>
+                    Artist
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script>
+
+/* USER DATA */
+
+let user = null;
+
+const keys = [
+    "artGalleryCurrentUser",
+    "currentUser",
+    "loggedInUser",
+    "user",
+    "userData"
+];
+
+for (const key of keys) {
+
+    const stored =
+        localStorage.getItem(key);
+
+    if (!stored) continue;
+
+    try {
+
+        const parsed =
+            JSON.parse(stored);
+
+        if (parsed) {
+
+            user = parsed;
+
+            break;
+
+        }
+
+    } catch(e) {}
+
+}
+
+
+if (!user || user.role !== "Artist") {
+
+    alert("Please log in with an Artist account.");
+    window.location.href = "Login.html";
+
+    user = {
+        name: "Artist",
+        email: "Not available",
+        role: "artist"
+    };
+
+}
+
+
+const name =
+    user.name ||
+    user.fullName ||
+    user.username ||
+    "Artist";
+
+
+const email =
+    user.email ||
+    "Not available";
+
+
+document.getElementById(
+    "artistName"
+).textContent = name;
+
+
+document.getElementById(
+    "welcomeName"
+).textContent = name;
+
+
+document.getElementById(
+    "profileName"
+).textContent = name;
+
+
+document.getElementById(
+    "profileFullName"
+).textContent = name;
+
+
+document.getElementById(
+    "profileEmail"
+).textContent = email;
+
+
+const letter =
+    name.charAt(0).toUpperCase();
+
+
+document.getElementById(
+    "avatar"
+).textContent = letter;
+
+
+document.getElementById(
+    "profileAvatar"
+).textContent = letter;
+
+
+/* NAVIGATION */
+
+const buttons =
+    document.querySelectorAll(
+        ".nav button"
+    );
+
+
+const sections =
+    document.querySelectorAll(
+        ".section"
+    );
+
+
+const titles = {
+
+    home: [
+        "Artist Dashboard",
+        "Manage your artwork and sales"
+    ],
+
+    artworks: [
+        "My Artworks",
+        "Manage your published artwork"
+    ],
+
+    upload: [
+        "Upload Artwork",
+        "Add a new artwork to the gallery"
+    ],
+
+    sales: [
+        "Sales",
+        "Track your artwork sales"
+    ],
+
+    profile: [
+        "My Profile",
+        "Manage your artist information"
+    ]
+
+};
+
+
+buttons.forEach(button => {
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            const id =
+                button.dataset.section;
+
+
+            buttons.forEach(b =>
+                b.classList.remove(
+                    "active"
+                )
+            );
+
+
+            sections.forEach(s =>
+                s.classList.remove(
+                    "active"
+                )
+            );
+
+
+            button.classList.add(
+                "active"
+            );
+
+
+            document.getElementById(
+                id
+            ).classList.add(
+                "active"
+            );
+
+
+            document.getElementById(
+                "pageTitle"
+            ).textContent =
+                titles[id][0];
+
+
+            document.getElementById(
+                "pageSubtitle"
+            ).textContent =
+                titles[id][1];
+
+        }
+    );
+
+});
+
+
+/* UPLOAD */
+
+document.getElementById(
+    "uploadBtn"
+).addEventListener(
+    "click",
+    () => {
+
+        const title =
+            document.getElementById(
+                "artTitle"
+            ).value;
+
+
+        if (!title) {
+
+            alert(
+                "Please enter an artwork title."
+            );
+
+            return;
+
+        }
+
+
+        alert(
+            "Artwork uploaded successfully!"
+        );
+
+    }
+);
+
+
+/* LOGOUT */
+
+document.getElementById(
+    "logout"
+).addEventListener(
+    "click",
+    () => {
+
+        if (!window.confirm("Are you sure you want to log out?")) {
+            return;
+        }
+
+        keys.forEach(
+            key =>
+                localStorage.removeItem(key)
+        );
+
+        window.location.href =
+            "Login.html";
+
+    }
+);
+
+</script>
+
+</body>
+</html>
